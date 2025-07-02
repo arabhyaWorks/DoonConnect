@@ -109,19 +109,19 @@ const HomePage: React.FC<HomePageProps> = ({
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800 text-white">
         <div className="max-w-4xl mx-auto px-4 py-6 md:py-8">
-          <div className="text-center mb-8">
-            <h1 className="text-2xl md:text-3xl font-bold mb-2">Welcome to DoonConnect</h1>
+          <div className="text-center mb-4">
+            <h1 className="text-2xl md:text-3xl font-bold ">Welcome to DoonConnect</h1>
             <p className="text-purple-200">Smart City Bus Service for Dehradoon</p>
           </div>
 
           {/* Location Card */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 mb-6">
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 mb-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <MapPin className="h-6 w-6 text-purple-200" />
                 <div>
                   <div className="text-sm text-purple-200">Current Location</div>
-                  <div className="font-medium">
+                  <div className="text-sm font-medium">
                     {userLocation ? userLocation.address : 'Select your location'}
                   </div>
                 </div>

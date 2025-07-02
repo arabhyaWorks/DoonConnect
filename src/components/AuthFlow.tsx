@@ -19,8 +19,7 @@ const AuthFlow: React.FC<AuthFlowProps> = ({ onAuthComplete, onBack }) => {
     // In a real app, this would use device APIs to get phone numbers
     const simulatedNumbers = [
       '+91 9452624111',
-      '+91 8765432109',
-      '+91 9876543210'
+
     ];
     setDetectedNumbers(simulatedNumbers);
   }, []);
@@ -84,15 +83,15 @@ const AuthFlow: React.FC<AuthFlowProps> = ({ onAuthComplete, onBack }) => {
 
       <div className="flex-1 flex flex-col">
         {/* Hero Image */}
-        <div className="flex justify-center py-8 bg-gradient-to-b from-purple-50 to-white">
+        <div className="flex justify-center bg-gradient-to-b from-purple-50 to-white">
           <img 
             src="/image.png" 
             alt="DoonConnect Bus App" 
-            className="w-56 h-56"
+            className="w-56 h-46"
           />
         </div>
 
-        <div className="flex-1 px-6 py-6">
+        <div className="flex-1 px-6 ">
           <div className="max-w-sm mx-auto">
             <div className="text-center mb-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome to DoonConnect</h2>

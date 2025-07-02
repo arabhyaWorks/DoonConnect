@@ -129,7 +129,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onBack }) => {
                   />
                 </div>
 
-                <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                {/* <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
                   <div className="flex items-start space-x-3">
                     <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                       <span className="text-white text-xs font-bold">i</span>
@@ -139,7 +139,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onBack }) => {
                       <p>Your name helps us personalize your tickets and provide better customer service.</p>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
 

@@ -209,13 +209,13 @@ const RoutesPage: React.FC<RoutesPageProps> = ({ routes, stops, onBack, onBookin
     return (
       <div className="fixed inset-0 bg-white z-50">
         <div className="h-full flex flex-col">
-          <div className="bg-purple-600 text-white p-4 flex items-center justify-between">
+          <div className="bg-purple-600 text-white p-4 flex items-center ">
             <button
               onClick={closeFullMap}
-              className="flex items-center space-x-2 hover:bg-purple-700 p-2 rounded-lg transition-colors"
+              className="flex  space-x-2 hover:bg-purple-700 p-2 rounded-lg transition-colors"
             >
               <ArrowLeft className="h-5 w-5" />
-              <span>Back to Routes</span>
+
             </button>
             <h1 className="text-lg font-semibold">Route Map</h1>
             <div className="w-20"></div>
