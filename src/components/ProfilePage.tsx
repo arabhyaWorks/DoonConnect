@@ -146,7 +146,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onBack }) => {
             <button
               onClick={handleSaveProfile}
               disabled={!editForm.name.trim()}
-              className="w-full bg-purple-600 text-white py-4 rounded-2xl font-semibold text-lg disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors hover:bg-purple-700"
+              className="w-full bg-purple-600 text-white py-4 mb-4 rounded-2xl font-semibold text-lg disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors hover:bg-purple-700"
             >
               Complete Profile
             </button>
