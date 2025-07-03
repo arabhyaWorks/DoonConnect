@@ -146,7 +146,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onBack }) => {
             <button
               onClick={handleSaveProfile}
               disabled={!editForm.name.trim()}
-              className="w-full bg-purple-600 text-white py-4 mb-4 rounded-2xl font-semibold text-lg disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors hover:bg-purple-700"
+              className="w-full bg-purple-600 text-white py-4 rounded-2xl font-semibold text-lg disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors hover:bg-purple-700"
             >
               Complete Profile
             </button>
@@ -275,6 +275,28 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onBack }) => {
             </button>
           </div>
           {/* Terms and Conditions */}
+          {/* Admin Portal */}
+          <div className="bg-white rounded-2xl shadow-sm">
+            <button 
+              onClick={() => {
+                window.history.pushState({}, '', '/admin');
+                window.dispatchEvent(new PopStateEvent('popstate'));
+              }}
+              className="w-full p-4 flex items-center justify-between hover:bg-purple-50 transition-colors rounded-2xl"
+            >
+              <div className="flex items-center space-x-4">
+                <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                  <Shield className="h-5 w-5 text-purple-600" />
+                </div>
+                <div className="text-left">
+                  <div className="font-medium text-gray-900">Admin Portal</div>
+                  <div className="text-sm text-gray-500">Access admin dashboard</div>
+                </div>
+              </div>
+              <ChevronRight className="h-5 w-5 text-gray-400" />
+            </button>
+          </div>
+
           <div className="bg-white rounded-2xl shadow-sm">
             <button className="w-full p-4 flex items-center justify-between hover:bg-gray-50 transition-colors rounded-2xl">
               <div className="flex items-center space-x-4">
