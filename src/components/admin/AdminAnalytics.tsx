@@ -9,7 +9,8 @@ import {
   BarChart3,
   PieChart as PieChartIcon,
   Activity,
-  Clock
+  Clock,
+  CreditCard
 } from 'lucide-react';
 import AdminLayout from './AdminLayout';
 import BarChart from '../charts/BarChart';
@@ -28,6 +29,13 @@ interface AnalyticsData {
   peakHours: string[];
   popularRoutes: { routeId: string; trips: number; revenue: number }[];
   dailyStats: { date: string; ridership: number; revenue: number; trips: number }[];
+  busWiseRevenue: { busId: string; revenue: number; trips: number; route: string }[];
+  paymentModeBreakdown: { mode: string; amount: number; percentage: number; transactions: number }[];
+  todayCollection: {
+    total: number;
+    byPaymentMode: { mode: string; amount: number }[];
+    byBus: { busId: string; amount: number; route: string }[];
+  };
 }
 
 const AdminAnalytics: React.FC<AdminAnalyticsProps> = ({ onLogout }) => {
@@ -85,7 +93,38 @@ const AdminAnalytics: React.FC<AdminAnalyticsProps> = ({ onLogout }) => {
           { routeId: 'R2', trips: Math.floor(Math.random() * 70) + 100, revenue: Math.floor(Math.random() * 3500) + 5000 },
           { routeId: 'R3', trips: Math.floor(Math.random() * 60) + 80, revenue: Math.floor(Math.random() * 3000) + 4000 }
         ],
-        dailyStats
+        dailyStats,
+        busWiseRevenue: [
+          { busId: 'UK05-AB-3265', revenue: Math.floor(Math.random() * 2000) + 3000, trips: Math.floor(Math.random() * 20) + 25, route: 'R2A' },
+          { busId: 'UK05-AB-3266', revenue: Math.floor(Math.random() * 1800) + 2500, trips: Math.floor(Math.random() * 18) + 22, route: 'R1' },
+          { busId: 'UK05-AB-3267', revenue: Math.floor(Math.random() * 1600) + 2200, trips: Math.floor(Math.random() * 16) + 20, route: 'R2' },
+          { busId: 'UK05-AB-3268', revenue: Math.floor(Math.random() * 1500) + 2000, trips: Math.floor(Math.random() * 15) + 18, route: 'R3' },
+          { busId: 'UK05-AB-3269', revenue: Math.floor(Math.random() * 1400) + 1800, trips: Math.floor(Math.random() * 14) + 16, route: 'R2A' },
+          { busId: 'UK05-AB-3270', revenue: Math.floor(Math.random() * 1300) + 1600, trips: Math.floor(Math.random() * 13) + 15, route: 'R1' }
+        ],
+        paymentModeBreakdown: [
+          { mode: 'UPI', amount: Math.floor(Math.random() * 15000) + 25000, percentage: 45, transactions: Math.floor(Math.random() * 200) + 350 },
+          { mode: 'Cash', amount: Math.floor(Math.random() * 12000) + 18000, percentage: 30, transactions: Math.floor(Math.random() * 150) + 250 },
+          { mode: 'Card', amount: Math.floor(Math.random() * 8000) + 12000, percentage: 15, transactions: Math.floor(Math.random() * 100) + 150 },
+          { mode: 'Net Banking', amount: Math.floor(Math.random() * 5000) + 8000, percentage: 10, transactions: Math.floor(Math.random() * 80) + 120 }
+        ],
+        todayCollection: {
+          total: Math.floor(Math.random() * 5000) + 8000,
+          byPaymentMode: [
+            { mode: 'UPI', amount: Math.floor(Math.random() * 2000) + 3500 },
+            { mode: 'Cash', amount: Math.floor(Math.random() * 1500) + 2500 },
+            { mode: 'Card', amount: Math.floor(Math.random() * 1000) + 1500 },
+            { mode: 'Net Banking', amount: Math.floor(Math.random() * 500) + 800 }
+          ],
+          byBus: [
+            { busId: 'UK05-AB-3265', amount: Math.floor(Math.random() * 800) + 1200, route: 'R2A' },
+            { busId: 'UK05-AB-3266', amount: Math.floor(Math.random() * 700) + 1000, route: 'R1' },
+            { busId: 'UK05-AB-3267', amount: Math.floor(Math.random() * 600) + 900, route: 'R2' },
+            { busId: 'UK05-AB-3268', amount: Math.floor(Math.random() * 500) + 800, route: 'R3' },
+            { busId: 'UK05-AB-3269', amount: Math.floor(Math.random() * 400) + 700, route: 'R2A' },
+            { busId: 'UK05-AB-3270', amount: Math.floor(Math.random() * 300) + 600, route: 'R1' }
+          ]
+        }
       };
 
       setAnalyticsData(mockData);
@@ -616,6 +655,235 @@ const AdminAnalytics: React.FC<AdminAnalyticsProps> = ({ onLogout }) => {
                 <div className="text-center">
                   <div className="text-2xl font-bold text-orange-600">+12%</div>
                   <div className="text-sm text-gray-500">Digital Adoption</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Bus-wise Revenue Analytics */}
+            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-semibold text-gray-900">Bus-wise Revenue Analysis</h3>
+                <Bus className="h-5 w-5 text-gray-400" />
+              </div>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Bus Revenue Chart */}
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-4">Revenue by Bus</h4>
+                  <BarChart
+                    data={analyticsData.busWiseRevenue
+                      .sort((a, b) => b.revenue - a.revenue)
+                      .slice(0, 6)
+                      .map(bus => ({
+                        label: bus.busId.split('-')[2], // Show only last part of bus number
+                        value: bus.revenue,
+                        color: '#3B82F6'
+                      }))}
+                    height={200}
+                  />
+                  <div className="text-center mt-2">
+                    <span className="text-sm text-gray-600">Top performing buses (Revenue in ₹)</span>
+                  </div>
+                </div>
+                
+                {/* Bus Performance Table */}
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-4">Detailed Bus Performance</h4>
+                  <div className="max-h-64 overflow-y-auto">
+                    <table className="w-full text-sm">
+                      <thead className="bg-gray-50 sticky top-0">
+                        <tr>
+                          <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Bus</th>
+                          <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Route</th>
+                          <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Revenue</th>
+                          <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Trips</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200">
+                        {analyticsData.busWiseRevenue
+                          .sort((a, b) => b.revenue - a.revenue)
+                          .map((bus, index) => (
+                            <tr key={bus.busId} className="hover:bg-gray-50">
+                              <td className="px-3 py-2 font-medium text-gray-900">{bus.busId}</td>
+                              <td className="px-3 py-2 text-gray-600">
+                                <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs">
+                                  {bus.route}
+                                </span>
+                              </td>
+                              <td className="px-3 py-2 font-semibold text-green-600">₹{bus.revenue.toLocaleString()}</td>
+                              <td className="px-3 py-2 text-gray-600">{bus.trips}</td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Bus Performance Summary */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-6 border-t border-gray-200">
+                <div className="text-center">
+                  <div className="text-xl font-bold text-blue-600">
+                    ₹{Math.round(analyticsData.busWiseRevenue.reduce((sum, bus) => sum + bus.revenue, 0) / analyticsData.busWiseRevenue.length).toLocaleString()}
+                  </div>
+                  <div className="text-sm text-gray-500">Avg Revenue/Bus</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-xl font-bold text-green-600">
+                    {Math.round(analyticsData.busWiseRevenue.reduce((sum, bus) => sum + bus.trips, 0) / analyticsData.busWiseRevenue.length)}
+                  </div>
+                  <div className="text-sm text-gray-500">Avg Trips/Bus</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-xl font-bold text-purple-600">
+                    {analyticsData.busWiseRevenue[0]?.busId.split('-')[2] || 'N/A'}
+                  </div>
+                  <div className="text-sm text-gray-500">Top Performer</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-xl font-bold text-orange-600">
+                    ₹{Math.round(analyticsData.busWiseRevenue.reduce((sum, bus) => sum + bus.revenue, 0) / analyticsData.busWiseRevenue.reduce((sum, bus) => sum + bus.trips, 0))}
+                  </div>
+                  <div className="text-sm text-gray-500">Revenue/Trip</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Today's Collection Breakdown */}
+            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-semibold text-gray-900">Today's Collection Breakdown</h3>
+                <IndianRupee className="h-5 w-5 text-gray-400" />
+              </div>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Today's Payment Mode Breakdown */}
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-4">Collection by Payment Mode</h4>
+                  <div className="space-y-3">
+                    {analyticsData.todayCollection.byPaymentMode.map((mode, index) => {
+                      const percentage = Math.round((mode.amount / analyticsData.todayCollection.total) * 100);
+                      const colors = ['bg-green-500', 'bg-yellow-500', 'bg-blue-500', 'bg-purple-500'];
+                      return (
+                        <div key={mode.mode} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                          <div className="flex items-center space-x-3">
+                            <div className={`w-4 h-4 ${colors[index]} rounded-full`}></div>
+                            <div>
+                              <div className="font-medium text-gray-900">{mode.mode}</div>
+                              <div className="text-sm text-gray-500">{percentage}% of total</div>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div className="font-bold text-gray-900">₹{mode.amount.toLocaleString()}</div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  
+                  <div className="mt-4 p-4 bg-green-50 rounded-xl border border-green-200">
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-green-800">Total Today's Collection</span>
+                      <span className="text-2xl font-bold text-green-900">₹{analyticsData.todayCollection.total.toLocaleString()}</span>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Today's Bus-wise Collection */}
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-4">Collection by Bus</h4>
+                  <div className="max-h-80 overflow-y-auto space-y-2">
+                    {analyticsData.todayCollection.byBus
+                      .sort((a, b) => b.amount - a.amount)
+                      .map((bus, index) => (
+                        <div key={bus.busId} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                              <span className="text-xs font-bold text-blue-600">#{index + 1}</span>
+                            </div>
+                            <div>
+                              <div className="font-medium text-gray-900">{bus.busId}</div>
+                              <div className="text-sm text-gray-500">Route {bus.route}</div>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div className="font-bold text-gray-900">₹{bus.amount.toLocaleString()}</div>
+                            <div className="text-xs text-gray-500">
+                              {Math.round((bus.amount / analyticsData.todayCollection.total) * 100)}%
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Payment Mode Analytics Summary */}
+            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-semibold text-gray-900">Payment Mode Analytics Summary</h3>
+                <CreditCard className="h-5 w-5 text-gray-400" />
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {analyticsData.paymentModeBreakdown.map((mode, index) => {
+                  const colors = [
+                    { bg: 'bg-green-100', text: 'text-green-800', icon: 'text-green-600' },
+                    { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: 'text-yellow-600' },
+                    { bg: 'bg-blue-100', text: 'text-blue-800', icon: 'text-blue-600' },
+                    { bg: 'bg-purple-100', text: 'text-purple-800', icon: 'text-purple-600' }
+                  ];
+                  const color = colors[index] || colors[0];
+                  
+                  return (
+                    <div key={mode.mode} className={`${color.bg} rounded-2xl p-6 border border-gray-100`}>
+                      <div className="flex items-center justify-between mb-4">
+                        <div className={`w-12 h-12 bg-white rounded-xl flex items-center justify-center`}>
+                          <CreditCard className={`h-6 w-6 ${color.icon}`} />
+                        </div>
+                        <div className={`text-2xl font-bold ${color.text}`}>
+                          {mode.percentage}%
+                        </div>
+                      </div>
+                      <div className={`font-semibold ${color.text} mb-2`}>{mode.mode}</div>
+                      <div className={`text-sm ${color.text} opacity-80 mb-1`}>
+                        Revenue: ₹{mode.amount.toLocaleString()}
+                      </div>
+                      <div className={`text-sm ${color.text} opacity-80`}>
+                        Transactions: {mode.transactions}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-gray-900">
+                      ₹{analyticsData.paymentModeBreakdown.reduce((sum, mode) => sum + mode.amount, 0).toLocaleString()}
+                    </div>
+                    <div className="text-sm text-gray-500">Total Revenue</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-gray-900">
+                      {analyticsData.paymentModeBreakdown.reduce((sum, mode) => sum + mode.transactions, 0).toLocaleString()}
+                    </div>
+                    <div className="text-sm text-gray-500">Total Transactions</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-gray-900">
+                      ₹{Math.round(analyticsData.paymentModeBreakdown.reduce((sum, mode) => sum + mode.amount, 0) / analyticsData.paymentModeBreakdown.reduce((sum, mode) => sum + mode.transactions, 0))}
+                    </div>
+                    <div className="text-sm text-gray-500">Avg Transaction</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-green-600">
+                      {analyticsData.paymentModeBreakdown.find(mode => mode.mode === 'UPI')?.percentage || 0}%
+                    </div>
+                    <div className="text-sm text-gray-500">Digital Adoption</div>
+                  </div>
                 </div>
               </div>
             </div>
